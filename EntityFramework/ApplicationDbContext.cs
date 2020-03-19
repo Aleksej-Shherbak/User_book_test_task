@@ -24,8 +24,24 @@ namespace EntityFramework
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
+            // внешний ключ
+            modelBuilder.Entity<UserRole>()
+                .HasKey(t => new {t.RoleId, t.UserId});
 
-            // relations are here ... 
+            // каскадное поведение
+            modelBuilder.Entity<UserRole>()
+                .HasOne(pt => pt.User)
+                .WithMany(p => p.UserRoles)
+                .HasForeignKey(pt => pt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserRole>()
+                .HasOne(pt => pt.Role)
+                .WithMany(t => t.UserRoles)
+                .HasForeignKey(pt => pt.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

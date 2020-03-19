@@ -1,13 +1,14 @@
-using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Domains;
-using Microsoft.AspNetCore.Mvc;
+using DTO;
+using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Repos.Abstract;
-using WebApi.Identity;
+using Services.Abstract;
 using WebApi.Requests;
 using WebApi.Responses;
-using WebApi.Responses.Abstract;
 using X.PagedList;
 
 namespace WebApi.Controllers
@@ -18,40 +19,67 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IMapper mapper, IUserService userService)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpGet("[action]")]
         public async Task<ActionResult<PagedList<User>>> All(int page = 1, int pageSize = 10)
         {
-            var usersPagedList = await _userRepository.AllAsPaged(page, pageSize);
-            return usersPagedList;
+            return await _userRepository.AllAsPaged(page, pageSize);
         }
 
         [HttpPost("[action]")]
-        [Authorize(Roles = RolesHelper.Admin)]
-        public async Task<ActionResult<IInformationResponse>> Create(UserRequest request)
+        public async Task<ActionResult<UserResponse>> Create(UserRequest request)
         {
-            throw new  NotImplementedException();
+            var userDto = _mapper.Map<UserRequest, UserDto>(request);
+
+            try
+            {
+                var user = await _userService.Create(userDto);
+                var response = _mapper.Map<User, UserResponse>(user);
+
+                return response;
+            }
+            catch (EntityNotExistsException e)
+            {
+                ModelState.TryAddModelError(EntityNotExistsException.ModelStateKeyText, e.Message);
+                return NotFound(ModelState);
+            }
         }
         
         [HttpPatch("[action]/{id}")]
-        [Authorize(Roles = RolesHelper.Admin)]
-        public async Task<ActionResult<IInformationResponse>> Edit(int id, UserRequest request)
+        public async Task<ActionResult<UserResponse>> Edit(int id, UserRequest request)
         {
-            throw new  NotImplementedException();
-            
+            var userDto = _mapper.Map<UserRequest, UserDto>(request);
+            userDto.Id = id;
+
+            try
+            {
+                var user = await _userService.Create(userDto);
+                var response = _mapper.Map<User, UserResponse>(user);
+
+                return response;
+            }
+            catch (EntityNotExistsException e)
+            {
+                ModelState.TryAddModelError(EntityNotExistsException.ModelStateKeyText, e.Message);
+                return NotFound(ModelState);
+            }
         }
         
         [HttpDelete("[action]/{id}")]
-        [Authorize(Roles = RolesHelper.Admin)]
-        public async Task<ActionResult<IInformationResponse>> Delete(int id, UserRequest request)
+        public async Task<ActionResult<HttpResponse>> Delete(int id)
         {
-            throw new  NotImplementedException();
+            await _userRepository.DeleteAsync(id);
             
+            return new HttpResponse("Done.");
         }
         
     }

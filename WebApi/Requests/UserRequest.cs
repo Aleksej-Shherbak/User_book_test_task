@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Requests
@@ -6,19 +7,19 @@ namespace WebApi.Requests
     {
         public int Id { get; set; }
         
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Имя обязательно")]
         public string Name { get; set; }
         
-        [Required(ErrorMessage = "Login is required")]
+        [Required(ErrorMessage = "Логин является обязательным полем")]
         public string Login { get; set; }
         
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Email является обязательным полем")]
         public string Email { get; set; }
         
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "Пароль является обязательным полем")]
         public string Password { get; set; }
         
-        [Required(ErrorMessage = "Role is required")]
-        public string Role { get; set; }
+        [Required(ErrorMessage = "Необходимо выбрать хотя бы одну роль")]
+        public List<int> RolesIds { get; set; }
     }
 }
