@@ -4,6 +4,7 @@ using Domains;
 using DTO;
 using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Repos.Abstract;
 using Services.Abstract;
 using WebApi.Requests;
@@ -31,7 +32,9 @@ namespace WebApi.Controllers
         [Route("")]
         public async Task<PagedListResponse<User>> Index(int page = 1, int pageSize = 10)
         {
-            var res =  await _userRepository.All.ToPagedListAsync(page, pageSize);
+            var res =  await _userRepository.All
+                .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                .ToPagedListAsync(page, pageSize);
 
             return new PagedListResponse<User>(res);
         }

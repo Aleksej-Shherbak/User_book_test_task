@@ -56,7 +56,7 @@ namespace Tests
         }
 
         [Test]
-        public async Task CantCreateWithoutRolesUser()
+        public async Task CanCreateWithoutRolesUser()
         {
             var userDto = new UserDto
             {
@@ -71,7 +71,8 @@ namespace Tests
 
             var res = await userService.Create(userDto);
             
-            _mockUserRepository.Verify(x => x.SaveAsync(It.IsAny<User>()), Times.Never);
+            _mockUserRepository.Verify(x
+                => x.SaveAsync(It.IsAny<User>()), Times.Once);
         }
         
         [Test]
@@ -97,7 +98,8 @@ namespace Tests
                 // Just pass, it's not important here
             }
             
-            _mockUserRepository.Verify(x => x.SaveAsync(It.IsAny<User>()), Times.Never);
+            _mockUserRepository.Verify(x => 
+                x.SaveAsync(It.IsAny<User>()), Times.Never);
         }
     }
 }

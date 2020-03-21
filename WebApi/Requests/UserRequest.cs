@@ -19,7 +19,6 @@ namespace WebApi.Requests
         [Required(ErrorMessage = "Пароль является обязательным полем")]
         public string Password { get; set; }
         
-        [Required(ErrorMessage = "Необходимо выбрать хотя бы одну роль")]
         public List<int> RolesIds { get; set; }
     }
 }

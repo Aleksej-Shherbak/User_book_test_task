@@ -25,11 +25,6 @@ namespace Services.Concrete
 
         public async Task<User> Create(UserDto dto)
         {
-            if (dto.RolesIds == null || !dto.RolesIds.Any())
-            {
-                return null;
-            }
-
             var roles =
                 await _roleRepository.All
                     .Include(x => x.UserRoles)
