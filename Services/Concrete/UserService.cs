@@ -67,7 +67,7 @@ namespace Services.Concrete
             user.Password = Crypt.CreateMd5(dto.Password);
             user.Roles = roles;
 
-            await _userRepository.SaveAsync(user);
+            await _userRepository.UpdateAsync(user);
             return user;
         }
     }

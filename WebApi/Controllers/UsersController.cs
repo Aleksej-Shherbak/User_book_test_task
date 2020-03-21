@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         [Route("")]
         public async Task<PagedListResponse<User>> Index(int page = 1, int pageSize = 10)
         {
-            var res =  await _userRepository.All
+            var res = await _userRepository.All
                 .Include(x => x.UserRoles).ThenInclude(x => x.Role)
                 .ToPagedListAsync(page, pageSize);
 
@@ -40,16 +40,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult<UserResponse>> Create(UserRequest request)
+        public async Task<ActionResult<HttpResponse>> Create(UserRequest request)
         {
             var userDto = _mapper.Map<UserRequest, UserDto>(request);
 
             try
             {
-                var user = await _userService.Create(userDto);
-                var response = _mapper.Map<User, UserResponse>(user);
-
-                return response;
+                await _userService.Create(userDto);
+                return new HttpResponse("Done.");
             }
             catch (EntityNotExistsException e)
             {
@@ -57,19 +55,18 @@ namespace WebApi.Controllers
                 return NotFound(ModelState);
             }
         }
-        
+
         [HttpPatch("[action]/{id}")]
-        public async Task<ActionResult<UserResponse>> Edit(int id, UserRequest request)
+        public async Task<ActionResult<HttpResponse>> Edit(int id, UserRequest request)
         {
             var userDto = _mapper.Map<UserRequest, UserDto>(request);
             userDto.Id = id;
 
             try
             {
-                var user = await _userService.Create(userDto);
-                var response = _mapper.Map<User, UserResponse>(user);
+                await _userService.Edit(userDto);
 
-                return response;
+                return new HttpResponse("Done");
             }
             catch (EntityNotExistsException e)
             {
@@ -77,14 +74,13 @@ namespace WebApi.Controllers
                 return NotFound(ModelState);
             }
         }
-        
+
         [HttpDelete("[action]/{id}")]
         public async Task<ActionResult<HttpResponse>> Delete(int id)
         {
             await _userRepository.DeleteAsync(id);
-            
+
             return new HttpResponse("Done.");
         }
-        
     }
 }
