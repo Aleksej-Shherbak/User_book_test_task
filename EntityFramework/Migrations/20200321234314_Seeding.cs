@@ -2,7 +2,7 @@
 
 namespace EntityFramework.Migrations
 {
-    public partial class SeedDb : Migration
+    public partial class Seeding : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

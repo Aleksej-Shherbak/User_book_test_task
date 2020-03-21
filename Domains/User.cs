@@ -22,7 +22,7 @@ namespace Domains
             get => UserRoles.Select(x => x.Role);
             set => UserRoles = value.Select(x => new UserRole
             {
-                RoleId = Id
+                RoleId = x.Id
             }).ToList();
         }
     }

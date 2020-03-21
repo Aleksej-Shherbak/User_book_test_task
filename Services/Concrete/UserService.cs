@@ -2,13 +2,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domains;
 using DTO;
-using Repos.Abstract;
-using Services.Abstract;
-using System.Security.Cryptography;
 using Infrastructure.Exceptions;
 using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
-using X.PagedList;
+using Repos.Abstract;
+using Services.Abstract;
 
 namespace Services.Concrete
 {
@@ -50,19 +48,21 @@ namespace Services.Concrete
 
         public async Task<User> Edit(UserDto dto)
         {
-            var user = await _userRepository.All
-                .Include(x => x.UserRoles)
-                .ThenInclude(x => x.Role)
-                .FirstOrDefaultAsync(x => x.Id == dto.Id);
-
             var roles =
-                await _roleRepository.All.Where(x => dto.RolesIds.Contains(x.Id)).ToListAsync();
+                await _roleRepository.All
+                    .Include(x => x.UserRoles).ThenInclude(x => x.User)
+                    .Where(x => dto.RolesIds.Contains(x.Id)).ToListAsync();
 
             if (roles.Count != dto.RolesIds.Count)
             {
                 throw new EntityNotExistsException("В списке ролей есть несуществующие роли");
             }
 
+            var user = await _userRepository.All
+                .Include(x => x.UserRoles)
+                .ThenInclude(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+            
             user.Name = dto.Name;
             user.Password = Crypt.CreateMd5(dto.Password);
             user.Roles = roles;

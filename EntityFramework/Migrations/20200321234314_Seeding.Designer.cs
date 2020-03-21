@@ -9,8 +9,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EntityFramework.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200319222012_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20200321234314_Seeding")]
+    partial class Seeding
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,23 @@ namespace EntityFramework.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Администратор"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Редактор"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Заказчик"
+                        });
                 });
 
             modelBuilder.Entity("Domains.User", b =>

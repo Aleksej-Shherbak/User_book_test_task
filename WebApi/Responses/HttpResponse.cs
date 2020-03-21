@@ -7,7 +7,7 @@ namespace WebApi.Responses
 
         public HttpResponse(ResponseStatus status, string description)
         {
-            Status = status == ResponseStatus.Success ? "ok" : "error`";
+            Status = status == ResponseStatus.Success ? "ok" : "error";
             Description = description;
         }
 

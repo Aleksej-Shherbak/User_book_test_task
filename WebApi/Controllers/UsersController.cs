@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Repos.Abstract;
 using Services.Abstract;
+using WebApi.Filters;
 using WebApi.Requests;
 using WebApi.Responses;
 using X.PagedList;
@@ -57,6 +58,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPatch("[action]/{id}")]
+        [UserExistsFilter]
         public async Task<ActionResult<HttpResponse>> Edit(int id, UserRequest request)
         {
             var userDto = _mapper.Map<UserRequest, UserDto>(request);
@@ -76,6 +78,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("[action]/{id}")]
+        [UserExistsFilter]
         public async Task<ActionResult<HttpResponse>> Delete(int id)
         {
             await _userRepository.DeleteAsync(id);
