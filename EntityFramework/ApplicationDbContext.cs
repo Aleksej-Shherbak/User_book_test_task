@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Domains;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +42,14 @@ namespace EntityFramework
                 .WithMany(t => t.UserRoles)
                 .HasForeignKey(pt => pt.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // в качестве сидинга
+            modelBuilder.Entity<Role>().HasData(new List<Role>
+            {
+                new Role{ Id = 1, Name = "Администратор"},
+                new Role{ Id = 2, Name = "Редактор"},
+                new Role{ Id = 3, Name = "Заказчик"},
+            });
 
         }
     }

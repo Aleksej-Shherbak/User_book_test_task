@@ -14,7 +14,6 @@ namespace Repos.Abstract
         Task UpdateAsync(T entity);
         Task DeleteAsync(int id);
         Task<T> GetById(int id);
-        Task<PagedList<T>> AllAsPaged(int page, int pageSize);
     }
 
 }

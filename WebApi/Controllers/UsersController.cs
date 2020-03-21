@@ -3,7 +3,6 @@ using AutoMapper;
 using Domains;
 using DTO;
 using Infrastructure.Exceptions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repos.Abstract;
 using Services.Abstract;
@@ -13,7 +12,6 @@ using X.PagedList;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UsersController : ControllerBase
@@ -29,10 +27,13 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet("[action]")]
-        public async Task<ActionResult<PagedList<User>>> All(int page = 1, int pageSize = 10)
+        [HttpGet]
+        [Route("")]
+        public async Task<PagedListResponse<User>> Index(int page = 1, int pageSize = 10)
         {
-            return await _userRepository.AllAsPaged(page, pageSize);
+            var res =  await _userRepository.All.ToPagedListAsync(page, pageSize);
+
+            return new PagedListResponse<User>(res);
         }
 
         [HttpPost("[action]")]

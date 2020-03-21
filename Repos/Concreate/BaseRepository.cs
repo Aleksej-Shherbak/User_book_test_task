@@ -58,11 +58,6 @@ namespace Repos.Concreate
         {
             return await _dbset.FindAsync(id);
         }
-
-        public async Task<PagedList<T>> AllAsPaged(int page, int pageSize)
-        {
-            return await _dbset.ToPagedListAsync(page, pageSize) as PagedList<T>;
-        }
+        
     }
-
 }
