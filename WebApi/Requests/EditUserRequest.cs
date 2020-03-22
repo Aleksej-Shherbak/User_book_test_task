@@ -7,10 +7,7 @@ namespace WebApi.Requests
     {
         [Required(ErrorMessage = "Имя обязательно")]
         public string Name { get; set; }
-        
-        [Required(ErrorMessage = "Логин является обязательным полем")]
-        public string Login { get; set; }
-        
+
         [Required(ErrorMessage = "Email является обязательным полем")]
         public string Email { get; set; }
         
