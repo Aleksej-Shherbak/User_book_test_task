@@ -37,6 +37,7 @@ namespace Services.Concrete
             var user = new User
             {
                 Login = dto.Login,
+                Email = dto.Email,
                 Name = dto.Name,
                 Password = Crypt.CreateMd5(dto.Password),
                 Roles = roles
@@ -64,7 +65,14 @@ namespace Services.Concrete
                 .FirstOrDefaultAsync(x => x.Id == dto.Id);
             
             user.Name = dto.Name;
-            user.Password = Crypt.CreateMd5(dto.Password);
+            user.Email = dto.Email;
+
+            // яесли пароль не пустой, то пользователь хочет его обновить.
+            if (!string.IsNullOrEmpty(dto.Password))
+            {
+                user.Password = Crypt.CreateMd5(dto.Password);
+            }
+
             user.Roles = roles;
 
             await _userRepository.UpdateAsync(user);

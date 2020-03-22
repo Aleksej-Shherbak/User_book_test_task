@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Requests
 {
-    public class UserRequest
+    public class CreateUserRequest
     {
-        public int Id { get; set; }
-        
         [Required(ErrorMessage = "Имя обязательно")]
         public string Name { get; set; }
         

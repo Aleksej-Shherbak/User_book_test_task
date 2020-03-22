@@ -29,8 +29,7 @@ namespace WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        [Route("")]
+        [HttpGet("")]
         public async Task<PagedListResponse<UserResponse>> Index(int page = 1, int pageSize = 10)
         {
             var res = await _userRepository.All
@@ -42,10 +41,21 @@ namespace WebApi.Controllers
             return new PagedListResponse<UserResponse>(response);
         }
 
-        [HttpPost("[action]")]
-        public async Task<ActionResult<HttpResponse>> Create(UserRequest request)
+        [HttpGet("[action]/{id}")]
+        [UserExistsFilter]
+        public async Task<ActionResult<UserResponse>> Get(int id)
         {
-            var userDto = _mapper.Map<UserRequest, UserDto>(request);
+            var user = await _userRepository.All
+                .Include(x => x.UserRoles).ThenInclude(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return _mapper.Map<User, UserResponse>(user);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult<HttpResponse>> Create(CreateUserRequest request)
+        {
+            var userDto = _mapper.Map<CreateUserRequest, UserDto>(request);
 
             try
             {
@@ -61,9 +71,9 @@ namespace WebApi.Controllers
 
         [HttpPatch("[action]/{id}")]
         [UserExistsFilter]
-        public async Task<ActionResult<HttpResponse>> Edit(int id, UserRequest request)
+        public async Task<ActionResult<HttpResponse>> Edit(int id, EditUserRequest request)
         {
-            var userDto = _mapper.Map<UserRequest, UserDto>(request);
+            var userDto = _mapper.Map<EditUserRequest, UserDto>(request);
             userDto.Id = id;
 
             try
