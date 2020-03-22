@@ -30,7 +30,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("")]
-        public async Task<PagedListResponse<UserResponse>> Index(int page = 1, int pageSize = 10)
+        public async Task<PagedListResponse<UserResponse>> Index(int page = 1, int pageSize = 4)
         {
             var res = await _userRepository.All
                 .Include(x => x.UserRoles).ThenInclude(x => x.Role)
