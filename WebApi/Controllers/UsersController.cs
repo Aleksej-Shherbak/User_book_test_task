@@ -65,7 +65,7 @@ namespace WebApi.Controllers
             catch (EntityNotExistsException e)
             {
                 ModelState.TryAddModelError(EntityNotExistsException.ModelStateKeyText, e.Message);
-                return NotFound(ModelState);
+                return BadRequest(ModelState);
             }
         }
 
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
             catch (EntityNotExistsException e)
             {
                 ModelState.TryAddModelError(EntityNotExistsException.ModelStateKeyText, e.Message);
-                return NotFound(ModelState);
+                return BadRequest(ModelState);
             }
         }
 
