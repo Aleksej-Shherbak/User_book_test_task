@@ -31,13 +31,15 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<PagedListResponse<User>> Index(int page = 1, int pageSize = 10)
+        public async Task<PagedListResponse<UserResponse>> Index(int page = 1, int pageSize = 10)
         {
             var res = await _userRepository.All
                 .Include(x => x.UserRoles).ThenInclude(x => x.Role)
                 .ToPagedListAsync(page, pageSize);
 
-            return new PagedListResponse<User>(res);
+            var response =  _mapper.Map<IPagedList<User>, IPagedList<UserResponse>>(res);
+            
+            return new PagedListResponse<UserResponse>(response);
         }
 
         [HttpPost("[action]")]

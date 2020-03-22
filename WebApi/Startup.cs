@@ -46,6 +46,8 @@ namespace WebApi
                 });
 
             services.AddAutoMapper(typeof(Startup));
+            
+            services.AddCors();
 
             // db context
             services.AddEntityFrameworkNpgsql()
@@ -73,7 +75,13 @@ namespace WebApi
             }
 
             app.UseRouting();
-            
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin();
+                builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            }).Build();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
